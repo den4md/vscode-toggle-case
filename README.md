@@ -8,7 +8,7 @@ This is the `den4md.toggle-case` fork of [Toggle Case by Pranshu Agrawal](https:
 
 1. Disable the original extension `PranshuAgrawal.toggle-case`. Both extensions retain the same command IDs, so they should not run together.
 2. In VS Code, run **Extensions: Install from VSIX...** and choose `newer-toggle-case-0.2.1.vsix` from the `artifacts` directory.
-3. Reload VS Code if prompted. Select text and press `Ctrl+M`.
+3. Reload VS Code if prompted. Select text and press `Ctrl+M`, or `Cmd+M` on macOS.
 
 Building a VSIX does not install or publish it. GitHub Release publication is a separate manual step.
 
@@ -28,7 +28,7 @@ Existing `toggleCase.case.*` and `toggleCase.notification.notifyOnChange` settin
 
 Use Node.js 24 LTS. Dependencies are locked in `package-lock.json`.
 
-```powershell
+```text
 npm ci --ignore-scripts
 npm run compile
 npm run lint
@@ -36,11 +36,7 @@ npm test
 npm run package
 ```
 
-`npm test` runs integration tests in a separate VS Code extension host, with user data and extensions under `.vscode-test`. Other installed extensions are disabled. The default test version is 1.145.0. Set `VSCODE_TEST_VERSION` to test another version, or set `VSCODE_EXECUTABLE_PATH` to use an installed executable instead of downloading one. For example:
-
-```powershell
-$env:VSCODE_EXECUTABLE_PATH = 'C:\Users\ds\AppData\Local\Programs\Microsoft VS Code\Code.exe'; npm test
-```
+`npm test` downloads and runs VS Code 1.145.0 in a separate extension host, with user data and extensions under `.vscode-test`. Other installed extensions are disabled. To test another version, set the `VSCODE_TEST_VERSION` environment variable in your terminal or IDE. To use an existing installation instead of downloading one, set `VSCODE_EXECUTABLE_PATH` to its executable path for your operating system.
 
 The debug configurations also use isolated user data. Integration tests cover direct commands, cycling, multiple and reversed selections, empty cursors, Unicode length changes, LF/CRLF, external edits, editor switches, rejected edits and Undo/Redo.
 
