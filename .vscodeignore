@@ -8,3 +8,10 @@ vsc-extension-quickstart.md
 **/.eslintrc.json
 **/*.map
 **/*.ts
+
+work/**
+artifacts/**
+.git/**
+.travis.yml
+eslint.config.mjs
+package-lock.json

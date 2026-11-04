@@ -1,10 +1,9 @@
 import * as changeCase from "change-case";
 import { IConfig } from './models';
 
-export const getNextCase = (currentCase: string, allowedCase: any) => {
+export const getNextCase = (currentCase: string, allowedCase: { [key: string]: unknown }) => {
 	const allCases = Object.keys(CONFIG);
-	const allowedCasesConfig = {...allowedCase, 'original': true};
-	const acceptedCases = allCases.filter((c: string) => allowedCasesConfig[CONFIG[c].configParam]);
+	const acceptedCases = allCases.filter((c: string) => c === 'ORIGINAL' || allowedCase[CONFIG[c].configParam]);
 	const index = acceptedCases.indexOf(currentCase);
 	if(index === -1 || index === acceptedCases.length - 1) {
 		return acceptedCases[0];
@@ -75,7 +74,7 @@ export const CONFIG: {
 	  representation: 'Header-Case',
 	  fn: toHeaderCase
 	},
-	PARAMCASE: {
+	KEBABCASE: {
 	  caseName: 'KEBABCASE',
 	  configParam: 'kebabCase',
 	  representation: 'kebab-case',
@@ -106,3 +105,17 @@ export const CONFIG: {
 	  fn: toSnakeCase
 	}
   };
+export const transformSelection = (text: string, transform: (text: string) => string): string => {
+	if (transform === CONFIG.ORIGINAL.fn) {
+		return text;
+	}
+	return text.split(/(\r\n|\r|\n)/).map((part, index) => {
+		if (index % 2 !== 0 || part.trim().length === 0) {
+			return part;
+		}
+		const [, leading, body, trailing] = /^(\s*)(.*?)(\s*)$/.exec(part)!;
+		const converted = transform(body);
+		// Symbol-only selections must not disappear when a formatter has no words.
+		return leading + (converted.length === 0 ? body : converted) + trailing;
+	}).join('');
+};

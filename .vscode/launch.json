@@ -11,6 +11,9 @@
 			"request": "launch",
 			"runtimeExecutable": "${execPath}",
 			"args": [
+				"--disable-extensions",
+				"--user-data-dir=${workspaceFolder}/.vscode-test/debug-user-data",
+				"--extensions-dir=${workspaceFolder}/.vscode-test/debug-extensions",
 				"--extensionDevelopmentPath=${workspaceFolder}"
 			],
 			"outFiles": [
@@ -24,6 +27,9 @@
 			"request": "launch",
 			"runtimeExecutable": "${execPath}",
 			"args": [
+				"--disable-extensions",
+				"--user-data-dir=${workspaceFolder}/.vscode-test/debug-user-data",
+				"--extensions-dir=${workspaceFolder}/.vscode-test/debug-extensions",
 				"--extensionDevelopmentPath=${workspaceFolder}",
 				"--extensionTestsPath=${workspaceFolder}/out/test/suite/index"
 			],

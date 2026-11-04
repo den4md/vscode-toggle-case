@@ -1,9 +1,16 @@
-# Change Log
+# Change log
 
-All notable changes to the "toggle-case" extension will be documented in this file.
+## 0.2.0
 
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
+- Rename the fork to Newer Toggle Case, extension ID `den4md.toggle-case`.
+- Read selections at command time instead of persisting document contents.
+- Serialize repeated commands and keep all transformed selections selected.
+- Support multiple selections, mixed empty cursors and changes in text length.
+- Reset the cycle after external edits, selection changes or editor switches.
+- Preserve indentation, blank lines and document line endings.
+- Fix kebab-case command lookup and cycling; preserve symbol-only selections.
+- Update the build, extension activation and integration test runner.
 
-## [v0.0.1]
+## 0.0.1
 
-- Initial release
+- Initial upstream release by Pranshu Agrawal.

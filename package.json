@@ -1,18 +1,18 @@
 {
 	"name": "toggle-case",
-	"displayName": "Toggle Case",
+	"displayName": "Newer Toggle Case",
 	"author": {
 		"name": "Pranshu Agrawal",
 		"email": "pranshu.a.11@gmail.com",
 		"url": "https://pranshu.works"
 	},
-	"publisher": "PranshuAgrawal",
-	"description": "Toggle through various cases on a key press",
+	"publisher": "den4md",
+	"description": "Cycle selected text through case formats, with reliable multiple selections.",
 	"license": "MIT",
 	"icon": "images/logo.png",
-	"version": "0.1.2",
+	"version": "0.2.0",
 	"engines": {
-		"vscode": "^1.46.0"
+		"vscode": "^1.100.0"
 	},
 	"categories": [
 		"Formatters",
@@ -26,19 +26,10 @@
 		"lowercase",
 		"toggle case"
 	],
-	"activationEvents": [
-		"*",
-		"onCommand:extension.toggleCase"
-	],
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/pranshuagrawal/vscode-toggle-case.git"
+		"url": "https://github.com/den4md/vscode-toggle-case.git"
 	},
-	"badges": [{
-		"description": "Build Status",
-		"href": "https://travis-ci.org/github/pranshuagrawal/vscode-toggle-case",
-		"url": "https://api.travis-ci.org/pranshuagrawal/vscode-toggle-case.svg?branch=master"
-	}],
 	"main": "./out/extension.js",
 	"contributes": {
 		"commands": [
@@ -47,53 +38,53 @@
 				"title": "Toggle Case"
 			},
 			{
-				"command":"extension.changeCase.upperCase",
-				"title":"Transform case to upperCase (UPPERCASE)"
-			 },
-			 {
-				"command":"extension.changeCase.lowerCase",
-				"title":"Transform case to lowerCase (lowercase)"
-			 },
-			 {
-				"command":"extension.changeCase.titleCase",
-				"title":"Transform case to titleCase (Title Case)"
-			 },
-			 {
-				"command":"extension.changeCase.camelCase",
-				"title":"Transform case to camelCase (camelCase)"
-			 },
-			 {
-				"command":"extension.changeCase.constantCase",
-				"title":"Transform case to constantCase (CONSTANT_CASE)"
-			 },
-			 {
-				"command":"extension.changeCase.dotCase",
-				"title":"Transform case to dotCase (dot.case)"
-			 },
-			 {
-				"command":"extension.changeCase.headerCase",
-				"title":"Transform case to headerCase (Header-Case)"
-			 },
-			 {
-				"command":"extension.changeCase.kebabCase",
-				"title":"Transform case to paramCase (kebab-case)"
-			 },
-			 {
-				"command":"extension.changeCase.pascalCase",
-				"title":"Transform case to pascalCase (PascalCase)"
-			 },
-			 {
-				"command":"extension.changeCase.pathCase",
-				"title":"Transform case to pathCase (path/case)"
-			 },
-			 {
-				"command":"extension.changeCase.sentenceCase",
-				"title":"Transform case to sentenceCase (Sentence case)"
-			 },
-			 {
-				"command":"extension.changeCase.snakeCase",
-				"title":"Transform case to snakeCase (snake_case)"
-			 }
+				"command": "extension.changeCase.upperCase",
+				"title": "Transform case to upperCase (UPPERCASE)"
+			},
+			{
+				"command": "extension.changeCase.lowerCase",
+				"title": "Transform case to lowerCase (lowercase)"
+			},
+			{
+				"command": "extension.changeCase.titleCase",
+				"title": "Transform case to titleCase (Title Case)"
+			},
+			{
+				"command": "extension.changeCase.camelCase",
+				"title": "Transform case to camelCase (camelCase)"
+			},
+			{
+				"command": "extension.changeCase.constantCase",
+				"title": "Transform case to constantCase (CONSTANT_CASE)"
+			},
+			{
+				"command": "extension.changeCase.dotCase",
+				"title": "Transform case to dotCase (dot.case)"
+			},
+			{
+				"command": "extension.changeCase.headerCase",
+				"title": "Transform case to headerCase (Header-Case)"
+			},
+			{
+				"command": "extension.changeCase.kebabCase",
+				"title": "Transform case to paramCase (kebab-case)"
+			},
+			{
+				"command": "extension.changeCase.pascalCase",
+				"title": "Transform case to pascalCase (PascalCase)"
+			},
+			{
+				"command": "extension.changeCase.pathCase",
+				"title": "Transform case to pathCase (path/case)"
+			},
+			{
+				"command": "extension.changeCase.sentenceCase",
+				"title": "Transform case to sentenceCase (Sentence case)"
+			},
+			{
+				"command": "extension.changeCase.snakeCase",
+				"title": "Transform case to snakeCase (snake_case)"
+			}
 		],
 		"keybindings": [
 			{
@@ -191,27 +182,28 @@
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
 		"compile": "tsc -p ./",
-		"lint": "eslint src --ext ts",
+		"lint": "eslint src --max-warnings 0",
 		"watch": "tsc -watch -p ./",
 		"pretest": "npm run compile && npm run lint",
 		"test": "node ./out/test/runTest.js",
-		"deploy": "vsce publish"
+		"package": "vsce package --out artifacts/newer-toggle-case-0.2.0.vsix"
 	},
 	"devDependencies": {
-		"@types/glob": "^7.1.1",
-		"@types/mocha": "^7.0.2",
-		"@types/node": "^13.11.0",
-		"@types/vscode": "^1.46.0",
-		"@typescript-eslint/eslint-plugin": "^2.30.0",
-		"@typescript-eslint/parser": "^2.30.0",
-		"eslint": "^6.8.0",
-		"glob": "^7.1.6",
-		"mocha": "^7.1.2",
-		"typescript": "^3.8.3",
-		"vsce": "^1.77.0",
-		"vscode-test": "^1.3.0"
+		"@types/mocha": "^10.0.10",
+		"@types/node": "^22.0.0",
+		"@types/vscode": "1.100.0",
+		"@vscode/test-electron": "^3.1.0",
+		"@vscode/vsce": "^4.1.0",
+		"eslint": "^10.14.0",
+		"mocha": "^12.0.3",
+		"typescript": "~5.9.3",
+		"typescript-eslint": "^8.72.1"
 	},
 	"dependencies": {
-		"change-case": "^4.1.1"
-	}
+		"change-case": "4.1.2"
+	},
+	"bugs": {
+		"url": "https://github.com/den4md/vscode-toggle-case/issues"
+	},
+	"homepage": "https://github.com/den4md/vscode-toggle-case#readme"
 }
