@@ -7,7 +7,7 @@ This is the `den4md.toggle-case` fork of [Toggle Case by Pranshu Agrawal](https:
 ## Install locally
 
 1. Disable the original extension `PranshuAgrawal.toggle-case`. Both extensions retain the same command IDs, so they should not run together.
-2. In VS Code, run **Extensions: Install from VSIX...** and choose `newer-toggle-case-0.2.0.vsix` from the `artifacts` directory.
+2. In VS Code, run **Extensions: Install from VSIX...** and choose `newer-toggle-case-0.2.1.vsix` from the `artifacts` directory.
 3. Reload VS Code if prompted. Select text and press `Ctrl+M`.
 
 Building a VSIX does not install or publish it. GitHub Release publication is a separate manual step.
@@ -18,6 +18,7 @@ Building a VSIX does not install or publish it. GitHub Release publication is a 
 - Every format uses the original text from the current cycle. The original step restores that text exactly.
 - Selection changes, edits outside the command, changes to enabled formats, and editor switches start a new cycle. Original text is held only in memory, never in extension storage.
 - Each nonempty selection is transformed independently. Empty cursors do not select or transform words. With only empty cursors, the command does nothing.
+- Word boundaries recognize Unicode letters, digits and combining marks, including Cyrillic and mixed-script text.
 - Each line is transformed separately, preserving indentation, trailing whitespace, blank lines and line endings. Symbol-only selections are kept when a format would produce an empty string.
 - One command is one Undo step. Rapid commands are processed in order.
 
@@ -43,7 +44,7 @@ $env:VSCODE_EXECUTABLE_PATH = 'C:\Users\ds\AppData\Local\Programs\Microsoft VS C
 
 The debug configurations also use isolated user data. Integration tests cover direct commands, cycling, multiple and reversed selections, empty cursors, Unicode length changes, LF/CRLF, external edits, editor switches, rejected edits and Undo/Redo.
 
-`npm run package` creates `artifacts/newer-toggle-case-0.2.0.vsix`. Build tools, tests and scratch files are excluded from the package. The old Travis configuration, including its automatic Marketplace publishing step, has been removed.
+`npm run package` creates `artifacts/newer-toggle-case-0.2.1.vsix`. Build tools, tests and scratch files are excluded from the package. The old Travis configuration, including its automatic Marketplace publishing step, has been removed.
 
 ## Dependency checks
 

@@ -11,17 +11,27 @@ export const getNextCase = (currentCase: string, allowedCase: { [key: string]: u
 	return acceptedCases[index+1];
 };
 
-export const toCamelCase = changeCase.camelCase;
+// The library defaults only recognize ASCII letters. Supply Unicode-aware
+// boundaries to every word-based format so non-Latin words are never stripped.
+const wordOptions = {
+	splitRegexp: [
+		/([\p{Ll}\p{N}]\p{M}*)(\p{Lu})/gu,
+		/(\p{Lu}\p{M}*)(\p{Lu}\p{M}*\p{Ll})/gu
+	],
+	stripRegexp: /[^\p{L}\p{N}\p{M}]+/gu
+};
+
+export const toCamelCase = (text: string) => changeCase.camelCase(text, wordOptions);
 export const toTitleCase = changeCase.capitalCaseTransform;
-export const toCapitalCase = changeCase.capitalCase;
-export const toConstantCase = changeCase.constantCase;
-export const toDotCase = changeCase.dotCase;
-export const toHeaderCase = changeCase.headerCase;
-export const toKebabCase = changeCase.paramCase;
-export const toPascalCase = changeCase.pascalCase;
-export const toPathCase = changeCase.pathCase;
-export const toSentenceCase = changeCase.sentenceCase;
-export const toSnakeCase = changeCase.snakeCase;
+export const toCapitalCase = (text: string) => changeCase.capitalCase(text, wordOptions);
+export const toConstantCase = (text: string) => changeCase.constantCase(text, wordOptions);
+export const toDotCase = (text: string) => changeCase.dotCase(text, wordOptions);
+export const toHeaderCase = (text: string) => changeCase.headerCase(text, wordOptions);
+export const toKebabCase = (text: string) => changeCase.paramCase(text, wordOptions);
+export const toPascalCase = (text: string) => changeCase.pascalCase(text, wordOptions);
+export const toPathCase = (text: string) => changeCase.pathCase(text, wordOptions);
+export const toSentenceCase = (text: string) => changeCase.sentenceCase(text, wordOptions);
+export const toSnakeCase = (text: string) => changeCase.snakeCase(text, wordOptions);
 
 export const CONFIG: {
 	[x: string]: IConfig

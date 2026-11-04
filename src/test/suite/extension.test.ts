@@ -1,5 +1,6 @@
 import * as assert from 'assert';
 import * as vscode from 'vscode';
+import * as changeCase from 'change-case';
 import { CONFIG, getNextCase, transformSelection } from '../../utilities';
 
 const pause = () => new Promise(resolve => setTimeout(resolve, 40));
@@ -7,8 +8,8 @@ const selection = (start: number, end: number) => new vscode.Selection(0, start,
 const toggle = () => vscode.commands.executeCommand('extension.toggleCase');
 const change = (format: string) => vscode.commands.executeCommand(`extension.changeCase.${format}`);
 
-async function open(content: string, selections?: vscode.Selection[]) {
-	const document = await vscode.workspace.openTextDocument({ content, language: 'plaintext' });
+async function open(content: string, selections?: vscode.Selection[], language = 'plaintext') {
+	const document = await vscode.workspace.openTextDocument({ content, language });
 	const editor = await vscode.window.showTextDocument(document);
 	editor.selections = selections ?? [new vscode.Selection(document.positionAt(0), document.positionAt(content.length))];
 	await pause();
@@ -225,5 +226,75 @@ suite('Newer Toggle Case integration', () => {
 	test('line transformation preserves mixed EOL sequences', () => {
 		assert.strictEqual(transformSelection(' first name\r\n\tother name\nlast name\r', CONFIG.CAMELCASE.fn),
 			' firstName\r\n\totherName\nlastName\r');
+	});
+
+	const russian = 'распредели ответственность между его';
+	const mixed = 'распредели responsibility между them';
+	const unicodeFormats: { [format: string]: [string, string] } = {
+		upperCase: ['РАСПРЕДЕЛИ ОТВЕТСТВЕННОСТЬ МЕЖДУ ЕГО', 'РАСПРЕДЕЛИ RESPONSIBILITY МЕЖДУ THEM'],
+		lowerCase: [russian, mixed],
+		titleCase: ['Распредели ответственность между его', 'Распредели responsibility между them'],
+		camelCase: ['распределиОтветственностьМеждуЕго', 'распределиResponsibilityМеждуThem'],
+		constantCase: ['РАСПРЕДЕЛИ_ОТВЕТСТВЕННОСТЬ_МЕЖДУ_ЕГО', 'РАСПРЕДЕЛИ_RESPONSIBILITY_МЕЖДУ_THEM'],
+		dotCase: ['распредели.ответственность.между.его', 'распредели.responsibility.между.them'],
+		headerCase: ['Распредели-Ответственность-Между-Его', 'Распредели-Responsibility-Между-Them'],
+		kebabCase: ['распредели-ответственность-между-его', 'распредели-responsibility-между-them'],
+		pascalCase: ['РаспределиОтветственностьМеждуЕго', 'РаспределиResponsibilityМеждуThem'],
+		pathCase: ['распредели/ответственность/между/его', 'распредели/responsibility/между/them'],
+		sentenceCase: ['Распредели ответственность между его', 'Распредели responsibility между them'],
+		snakeCase: ['распредели_ответственность_между_его', 'распредели_responsibility_между_them']
+	};
+	for (const [format, expected] of Object.entries(unicodeFormats)) {
+		for (const [index, text] of [russian, mixed].entries()) {
+			test(`${format} preserves ${index === 0 ? 'Cyrillic' : 'mixed-script'} words inside a Markdown fence`, async () => {
+				const editor = await open(`\`\`\`text\n${text}\n\`\`\``,
+					[new vscode.Selection(1, 0, 1, text.length)], 'markdown');
+				await change(format);
+				assert.strictEqual(editor.document.getText(), `\`\`\`text\n${expected[index]}\n\`\`\``);
+				assert.strictEqual(editor.document.getText(editor.selection), expected[index]);
+			});
+		}
+	}
+
+	test('cycling Cyrillic in Markdown reaches snake_case and returns the exact original', async () => {
+		const text = `\`\`\`\n${russian}\n\`\`\``;
+		const editor = await open(text, [new vscode.Selection(1, 0, 1, russian.length)], 'markdown');
+		for (const format of Object.values(CONFIG).filter(format => format.caseName !== 'ORIGINAL')) {
+			await toggle();
+			assert.strictEqual(editor.document.getText(editor.selection), unicodeFormats[format.configParam][0]);
+			await pause();
+		}
+		await toggle();
+		assert.strictEqual(editor.document.getText(), text);
+	});
+
+	test('Unicode word boundaries preserve accents, combining marks and non-Latin digits', () => {
+		for (const [input, expected] of [
+			['приветМир', 'привет_мир'],
+			['XMLПарсер', 'xml_парсер'],
+			['мойXMLПарсер', 'мой_xml_парсер'],
+			['ÄpfelÜberall', 'äpfel_überall'],
+			['cafe\u0301Noir', 'cafe\u0301_noir'],
+			['ΚαλημέραΚόσμε', 'καλημέρα_κόσμε'],
+			['你好 世界', '你好_世界'],
+			['версия٢Новая', 'версия٢_новая']
+		]) {
+			assert.strictEqual(CONFIG.SNAKECASE.fn(input), expected, input);
+		}
+	});
+
+	test('Unicode options retain the upstream ASCII word-format behavior', () => {
+		const upstream: { [format: string]: (text: string) => string } = {
+			CAMELCASE: changeCase.camelCase, CONSTANTCASE: changeCase.constantCase,
+			DOTCASE: changeCase.dotCase, HEADERCASE: changeCase.headerCase,
+			KEBABCASE: changeCase.paramCase, PASCALCASE: changeCase.pascalCase,
+			PATHCASE: changeCase.pathCase, SENTENCECASE: changeCase.sentenceCase,
+			SNAKECASE: changeCase.snakeCase
+		};
+		for (const input of ['hello World', 'XMLHttpRequest', 'foo123Bar', 'test_123_name', 'a.b-c/d', '  API URL  ', '___']) {
+			for (const [format, convert] of Object.entries(upstream)) {
+				assert.strictEqual(CONFIG[format].fn(input), convert(input), `${format}: ${input}`);
+			}
+		}
 	});
 });

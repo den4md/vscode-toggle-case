@@ -10,7 +10,7 @@
 	"description": "Cycle selected text through case formats, with reliable multiple selections.",
 	"license": "MIT",
 	"icon": "images/logo.png",
-	"version": "0.2.0",
+	"version": "0.2.1",
 	"engines": {
 		"vscode": "^1.100.0"
 	},
@@ -186,7 +186,7 @@
 		"watch": "tsc -watch -p ./",
 		"pretest": "npm run compile && npm run lint",
 		"test": "node ./out/test/runTest.js",
-		"package": "vsce package --out artifacts/newer-toggle-case-0.2.0.vsix"
+		"package": "vsce package --out artifacts/newer-toggle-case-0.2.1.vsix"
 	},
 	"devDependencies": {
 		"@types/mocha": "^10.0.10",

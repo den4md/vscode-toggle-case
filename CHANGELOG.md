@@ -1,5 +1,11 @@
 # Change log
 
+## 0.2.1
+
+- Preserve Cyrillic and mixed-script words in all word-based case formats.
+- Recognize Unicode case boundaries, numbers and combining marks.
+- Cover the reported Markdown code-fence example and ASCII compatibility in tests.
+
 ## 0.2.0
 
 - Rename the fork to Newer Toggle Case, extension ID `den4md.toggle-case`.
